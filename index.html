@@ -1,0 +1,58 @@
+
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+  </head>
+  <body>
+    <a-scene mindar-image="imageTargetSrc: targets.mind;" color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false" filterMinCF:="0.0001" filterBeta:="5000" missTolerance:= "10" warmupTolerance:="10">
+      <a-assets>
+        <img id="card" src="side1.png" />
+        <a-asset-item id="avatarModel" src="model.glb"></a-asset-item>
+      </a-assets>
+
+      <a-camera position="0 0 0" look-controls="enabled: true"></a-camera>
+      <a-entity mindar-image-target="targetIndex: 0">
+        <!-- <a-plane src="#card" position="0 0 0" height="0.552" width="1" rotation="0 0 0"></a-plane> -->
+        <a-gltf-model rotation="90 0 0 " position="0 0 0.1" scale="0.0025 0.0025 0.0025" src="#avatarModel"  >
+      </a-entity>
+    </a-scene>
+
+    <!-- Button -->
+    <img src="logo.png" class="button-image">
+<a href="https://ar-simply.com" class="web-button" target="_blank">Click to learn more</a>
+
+  </body>
+</html>
+
+<!-- Style -->
+<style>
+    .button-image {
+    position: fixed;
+    bottom: 20px;
+    left: 44%;
+    transform: translateX(-50%);
+    width: 44px; /* Adjust size */
+    height: auto; /* Keep aspect ratio */
+  }
+
+  .web-button {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #00232E;
+    color: rgb(255, 255, 255);
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 16px;
+    text-decoration: none;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+  }
+
+  .web-button:hover {
+    background: #0056b3;
+  }
+</style>
