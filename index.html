@@ -7,7 +7,7 @@
   </head>
   <body>
     <a-scene 
-    mindar-image="imageTargetSrc: targets.mind; filterMinCF: 0.1; filterBeta: 1000; missTolerance: 5; warmupTolerance: 10" 
+    mindar-image="imageTargetSrc: targets.mind; filterMinCF: 0.0001; filterBeta: 0.001; missTolerance: 5; warmupTolerance: 10" 
     color-space="sRGB" 
     renderer="colorManagement: true; physicallyCorrectLights: true" 
     vr-mode-ui="enabled: false" 
@@ -19,8 +19,8 @@
 
       <a-camera position="0 0 0" look-controls="enabled: true"></a-camera>
       <a-entity mindar-image-target="targetIndex: 0">
-        <!-- <a-plane src="#card" position="0 0 0" height="0.552" width="1" rotation="0 0 0"></a-plane> -->
-        <a-gltf-model  position="0 0 0" scale="0.01 0.01 0.01" src="#avatarModel"  >
+         <a-plane src="#card" position="0 0 0" height="0.552" width="1" rotation="0 0 0"></a-plane> 
+        <a-gltf-model  position="0 0 0" scale="0.005 0.005 0.005" src="#avatarModel"  >
       </a-entity>
     </a-scene>
 
@@ -52,7 +52,7 @@
   }
 
   .web-button {
-    background-color: #fb1212; 
+    background-color: #d6f61f; 
     color: white;
     padding: 15px 20px;
     text-decoration: none;
