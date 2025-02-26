@@ -21,4 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }, 2000); // 10000 milliseconds = 10 seconds
     });
   });
+
+  
+  
   
