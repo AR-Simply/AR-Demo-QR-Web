@@ -21,7 +21,22 @@ document.addEventListener('DOMContentLoaded', () => {
       }, 2000); // 10000 milliseconds = 10 seconds
     });
   });
+  AFRAME.registerComponent('a-gltf-model-ktx2', {
+    schema: {
+      src: { type: 'model' }
+    },
+    init: function () {
+      var loader = new THREE.GLTFLoader();
+      var ktx2Loader = new THREE.KTX2Loader()
+        .setTranscoderPath('https://cdn.jsdelivr.net/npm/three@0.137.0/examples/js/libs/basis/')
+        .detectSupport(this.el.sceneEl.renderer);
+      loader.setKTX2Loader(ktx2Loader);
 
-  
-  
+      loader.load(this.data.src, (gltf) => {
+        this.el.setObject3D('mesh', gltf.scene);
+      }, undefined, (error) => {
+        console.error('An error occurred while loading the model:', error);
+      });
+    }
+  });
   
