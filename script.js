@@ -1,34 +1,43 @@
-AFRAME.registerComponent('default-textures', {
-  schema: {
-    textureId: { type: 'string', default: 'defaultTexture' } // ID of <img> in assets
-  },
-
+AFRAME.registerComponent('texture-fallback', {
   init: function () {
-    this.el.addEventListener('model-loaded', () => {
-      const textureEl = document.querySelector(`#${this.data.textureId}`);
-      const textureLoader = new THREE.TextureLoader();
-      const defaultTexture = textureLoader.load(textureEl.src);
-      defaultTexture.colorSpace = THREE.SRGBColorSpace;
+    const sceneEl = this.el.sceneEl;
+    const defaultTexture = new THREE.TextureLoader().load('#defaultTex');
+    defaultTexture.colorSpace = THREE.SRGBColorSpace; // Three.js r173+
 
-      this.el.object3D.traverse((child) => {
-        if (child.material) {
-          // Override ALL textures (base color, emissive, etc.)
-          child.material.map = defaultTexture;
-          child.material.emissiveMap = defaultTexture;
-          child.material.needsUpdate = true;
-        } else{
-          console.log("hit2")
-          child.material = new THREE.MeshStandardMaterial({
-            map: defaultTexture,          // Base color texture
-            emissiveMap: defaultTexture,  // Glowing parts texture
-            color: new THREE.Color(0xFFFFFF), // Base color
-            emissive: new THREE.Color(0x000000), // Emissive color
-            roughness: 0.5,
-            metalness: 0.0
-          });
-          child.material.needsUpdate = true;
-        };
-      });
+    // Wait for renderer to initialize
+    sceneEl.addEventListener('renderstart', () => {
+      const loader = sceneEl.systems['gltf-model']?.loader;
+      if (!loader) {
+        console.error("GLTFLoader missing. Ensure 'gltf-model' is registered.");
+        return;
+      }
+
+      // Patch texture loading
+      const originalLoad = loader.load;
+      loader.load = function (url, onLoad, onProgress, onError) {
+        originalLoad.call(loader, url, 
+          (gltf) => {
+            // Replace failed textures post-load
+            gltf.scene.traverse((child) => {
+              if (child.material) {
+                ['map', 'emissiveMap', 'normalMap'].forEach((slot) => {
+                  const tex = child.material[slot];
+                  if (tex?.isTexture && !tex.source?.data) {
+                    child.material[slot] = defaultTexture.clone();
+                    child.material.needsUpdate = true;
+                  }
+                });
+              }
+            });
+            onLoad(gltf);
+          },
+          onProgress,
+          (err) => {
+            console.error("Texture load failed:", err);
+            onError(err);
+          }
+        );
+      };
     });
   }
 });
